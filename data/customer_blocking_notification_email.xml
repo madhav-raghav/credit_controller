@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <!--Email template -->
+        <record id="customer_blocking_notification_email" model="email.template">
+            <field name="name">Customer Blocking Notification Email</field>
+            <field name="model_id" ref="model_blocking_details"/>
+            <field name="email_from">${(object.blocked_by.company_id.email or 'noreply@localhost.com')|safe}</field>
+            <field name="email_to"></field>
+            <field name="subject">Notification: Block action taken by ${(object.blocked_by.company_id.name)} </field>
+            <field name="body_html"><![CDATA[
+			<span>
+			<font color="black"><p><span>Dear ${object.customer_blocking_id.partner_id.name},</span></p>
+			
+			<p>
+			Our records indicate that you have been blocked by the system due to the following reason.<br>
+			<span>Reason: ${object.reason}</span> <br/><br/>
+			If you have any queries regarding your account, Please contact us.
+			<br/><br/>
+			Thank you.<br/>
+			</p>
+			
+			<p>
+				<b>Note:  This is an auto generated email, Do not reply to this email. Please get in touch personally 
+				with ${(object.blocked_by.company_id.name)} for more information.</b>
+			</p>
+			<p>
+			With Regards,<br/>
+			${(object.blocked_by.company_id.name)}<br/>
+			</p></font></span>
+			]]>
+
+</field>
+        </record>
+    </data>
+</openerp>

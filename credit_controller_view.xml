@@ -1,0 +1,211 @@
+<openerp>
+ <data>
+	<!-- View Inheritance of res.partner_form -->
+		<record id="view_partner_form_inherit" model="ir.ui.view">
+			<field name="name">res.partner.form.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<field name="website" position="after">
+					<field name="cash_customer" attrs="{'invisible':[('customer','=',False)]}"
+						readonly="1" />
+					<field name="is_blocked" readonly="1"
+						attrs="{'invisible':[('customer','=',False)]}" />
+				</field>
+
+
+				<field name="credit" position="before">
+					<field name="credit_details_id" string="Credit Details No."
+						readonly="1" attrs="{'invisible':[('customer','=',False)]}" />
+				</field>
+
+				<field name="credit" position="after">
+					<field name="cl_applicable_date" attrs="{'invisible':[('customer','=',False)]}" />
+				</field>
+
+				<field name="credit_limit" position="replace">
+					<field name="credit_limit" attrs="{'invisible':[('customer','=',False)]}" />
+					<field name="available_credit" attrs="{'invisible':[('customer','=',False)]}" />
+				</field>
+			</field>
+		</record>
+
+		<!-- Form View of Credit Details -->
+		<record id="view_credit_details_form" model="ir.ui.view">
+			<field name="name">credit.details.form</field>
+			<field name="model">credit.details</field>
+			<field name="arch" type="xml">
+				<form string="Create Credit Details">
+					<sheet>
+						<h2>
+							<label string="Credit No:" />
+							<field name="credit_details_no" class="oe_inline" readonly="1" />
+						</h2>
+
+						<group>
+							<group string="Customer Details">
+								<field name="make_readonly" invisible="1" />
+								<field name="partner_id" string="Name" on_change="1"
+									required="1"
+									domain="[('customer','=',True),('cash_customer','=',True),('is_company','=',True)]"
+									attrs="{'readonly': [('make_readonly','=',True)]}" 
+									context="{'show_company': True, 'default_is_company': True}"/>
+								<field name="customer_phone" string="Phone No." />
+								<field name="available_credit" string="Available Credit"
+									readonly="1" />
+								<field name="utilized_credit" string="Utilized Credit" />
+								<field name="credit_limit_latest" string="Credit Limit" />
+								<field name="company_id" string ="Company" readonly="1"/>
+							</group>
+							<group></group>
+						</group>
+						<group string="Credit Limit">
+							<field name="credit_limit" string="Credit Limit" nolabel="1"
+								context="{'default_assigned_by': uid}">
+								<tree>
+									<!-- <field name="cl_details_no" /> -->
+									<field name="credit_limit" string="Credit Limit" />
+									<field name="cl_applicable_date" string="Applicable From" />
+									<field name="assigned_by" string="Assigned By" />
+								</tree>
+								<form>
+									<group>
+										<group string="Credit Limit">
+											<field name="cl_details_no" invisible="1" />
+											<field name="credit_limit" string="Credit Limit"
+												required="1" attrs="{'readonly' :[('make_readonly','=',True)]}" />
+											<field name="cl_applicable_date" string="Applicable From"
+												required="1" attrs="{'readonly' :[('make_readonly','=',True)]}" />
+											<field name="assigned_by" string="Assigned By"
+												required="1" attrs="{'readonly' :[('make_readonly','=',True)]}" />
+											<field name="make_readonly" invisible="1" />
+										</group>
+										<group>
+										</group>
+									</group>
+								</form>
+							</field>
+						</group>
+						<group>
+							<group>
+								<field name="reg_form" class="oe_inline" />
+							</group>
+							<group></group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Tree View of Credit Details -->
+		<record id="view_credit_details_tree" model="ir.ui.view">
+			<field name="name">credit.details.tree</field>
+			<field name="model">credit.details</field>
+			<field name="arch" type="xml">
+				<tree string="Create Credit Details" colors="red: 0 > available_credit">
+					<field name="partner_id" string="Customer Name" />
+					<field name="customer_phone" string="Customer Phone No." />
+					<field name="utilized_credit" string="Utilized Credit" />
+					<field name="available_credit" string="Available Credit" />
+				</tree>
+			</field>
+		</record>
+
+
+		<!-- Form View of Customer Blocking -->
+		<record id="view_customer_blocking_form" model="ir.ui.view">
+			<field name="name">customer.blocking.form</field>
+			<field name="model">customer.blocking</field>
+			<field name="arch" type="xml">
+				<form string="Block Customer">
+					<sheet>
+						<group>
+							<group>
+								<field name="partner_id" string="Customer Name"
+									domain="[('customer','=',True),('customer_blocking_created','=',False),('is_company','=',True),('cash_customer','=',False)]"
+									required="1" options="{'no_create': True}"/>
+								<field name="customer_phone" string="Customer Phone No."
+									readonly="1" />
+								<field name="status" string="Status" readonly="1" />
+							</group>
+							<group></group>
+						</group>
+						<group string="Block/Unblock Details">
+							<field name="block" string="Block/Unblock Details" widget="one2many_list"
+								nolabel="1" context="{'default_blocked_by' : uid}">
+								<tree>
+									<field name="blocking_no" string="Sr No." />
+									<field name="blocking_date_time" string="Date &amp; Time" />
+									<field name="blocked_by" string="By" />
+									<field name="reason" string="Reason" />
+									<field name="state" string="State" />
+								</tree>
+								<form>
+									<group>
+										<group string="Block/Unblock Details">
+											<field name="blocking_date_time" string="Date &amp; Time"
+												required="1" attrs="{'readonly' :[('make_readonly','=',True)]}" />
+											<field name="blocked_by" string="Blocked/UnBlocked By"
+												required="1" attrs="{'readonly' :[('make_readonly','=',True)]}" />
+											<field name="state" string="State" required="1"
+												attrs="{'readonly' :[('make_readonly','=',True)]}" />
+											<field name="reason" string="Reason" required="1"
+												attrs="{'readonly' :[('make_readonly','=',True)]}" />
+											<field name="make_readonly" invisible="1" />
+										</group>
+										<group>
+										</group>
+									</group>
+								</form>
+							</field>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- Tree View of Customer Blocking -->
+		<record id="view_customer_blocking_tree" model="ir.ui.view">
+			<field name="name">customer.blocking.tree</field>
+			<field name="model">customer.blocking</field>
+			<field name="arch" type="xml">
+				<tree string="Block/Unblock Customer" colors="red: status=='block'">
+					<field name="partner_id" string="Customer Name" />
+					<field name="credit_limit" string="Credit Limit" />
+					<field name="utilized_credit" string="Utilized Credit" />
+					<field name="available_credit" string="Available Credit" />
+					<field name="status" string="Status" />
+				</tree>
+			</field>
+		</record>
+
+
+		<!-- Action for Credit Details menu item -->
+		<record id="action_view_credit_details" model="ir.actions.act_window">
+			<field name="name">Credit Details</field>
+			<field name="res_model">credit.details</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Action for Customer Blocking menu item -->
+		<record id="action_view_blocking_details" model="ir.actions.act_window">
+			<field name="name">Customer Block/Unblock Details</field>
+			<field name="res_model">customer.blocking</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+		<menuitem id="menu_view_credit_limit" name="Credit Limit"
+			parent="account.menu_finance_receivables" sequence="101"
+			action="action_view_credit_details" />
+			
+		<menuitem id="menu_view_customer_blocking" name="Customer Blocking"
+			parent="account.menu_finance_receivables" sequence="102"
+			action="action_view_blocking_details" />
+
+		
+	</data>
+</openerp>

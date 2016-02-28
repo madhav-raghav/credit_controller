@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <!--  HOD Tag  -->  
+        <record id="hod_tag" model="hr.employee.category">
+               <field name="name">HOD</field>
+        </record>
+        
+        <!--  Sales Person Tag  -->
+        <record id="sales_person_tag" model="hr.employee.category">
+               <field name="name">Sales Person</field>
+        </record>
+        
+        <!--  Credit Controller Tag  -->
+        <record id="credit_controller_tag" model="hr.employee.category">
+               <field name="name">Credit Controller</field>
+        </record>
+
+    </data>
+</openerp>
